@@ -1,4 +1,5 @@
 const { resolve } = require("path");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -11,10 +12,16 @@ module.exports = {
   // File resolutions
   resolve: {
     extensions: [".ts", ".js"],
+    fallback: {
+      fs: false,
+      net: false,
+    },
   },
 
   // generate cource maps -- for debugging
   devtool: "source-map",
+
+  plugins: [new NodePolyfillPlugin()],
 
   // Loaders
   module: {
