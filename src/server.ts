@@ -1,16 +1,22 @@
 import express from "express";
 import { config } from "dotenv";
-// import { connectDB } from "./db/dbConfig";
-// import { MongoClient } from "mongodb";
+import playerRoutes from "./routes/players";
+import { connectDB } from "./config/dbConfig";
 
 config();
-const app = express();
 const { PORT } = process.env;
-const port = process.env.PORT || PORT;
+const port = process.env.production || PORT;
 
+const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
-});
+// Database connection
+connectDB().then((conn) =>
+  console.log(`connected to database: ${conn.connection.db.databaseName}...`)
+);
+
+// Routes
+app.use("/api/players", playerRoutes);
+// app.post("/api/players");
+
+app.listen(port, () => console.log(`Listening on port ${port}...`));
