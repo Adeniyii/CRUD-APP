@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+// Create mongoose schema
 const PlayerSchema = new Schema(
   {
     name: {
@@ -22,4 +23,7 @@ const PlayerSchema = new Schema(
   { autoIndex: false }
 );
 
-export const PlayerModel = model("Player", PlayerSchema);
+// Create collection from PlayerSchema
+const PlayerModel = model("Player", PlayerSchema);
+
+export default PlayerModel;

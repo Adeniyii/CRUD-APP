@@ -1,28 +1,31 @@
 import express from "express";
 import { config } from "dotenv";
-import playerRoutes from "./routes/players";
+import playerRoutes from "./routes/playerRoute";
 import { connectDB } from "./config/dbConfig";
 import { Mongoose } from "mongoose";
 
+// Load dotenv
 config();
 
+// Init express
 const app = express();
 app.use(express.json());
-const { PORT } = process.env;
-const port = process.env.production || PORT;
 
-let connection: Mongoose | undefined;
+const port = process.env.PORT || 4000;
+
+// Mongoose connection
+let mongooseConn: Mongoose | undefined;
 
 // Middleware - Create mongoose connection if none available.
 app.use(async (_, res, next) => {
-  if (!connection) {
+  if (!mongooseConn || mongooseConn!.connection.readyState === 0) {
     try {
-      connection = await connectDB();
+      mongooseConn = await connectDB();
       console.log(
-        `connected to database: ${connection!.connection.db.databaseName}...`
+        `connected to database: ${mongooseConn!.connection.db.databaseName}...`
       );
     } catch (error) {
-      res.status(500).json({ success: false, data: error.message });
+      res.status(500).json({ message: error.message });
       return;
     }
   }
@@ -32,6 +35,5 @@ app.use(async (_, res, next) => {
 // Routes
 app.use("/api/players", playerRoutes);
 
-// app.post("/api/players");
-
+// Listener
 app.listen(port, () => console.log(`Listening on port ${port}...`));
