@@ -6,6 +6,7 @@ const { MONGO_URI } = process.env;
 
 export async function connectDB() {
   try {
+    // mongoose.
     const client = await mongoose.connect(MONGO_URI!, {
       useFindAndModify: false,
       useNewUrlParser: true,
@@ -14,7 +15,7 @@ export async function connectDB() {
 
     return client;
   } catch (error) {
-    error.message += "----- db connection error in dbConfig file";
+    error.message += "----- Please contact the developer.";
     throw new Error(error);
   }
 }
