@@ -61,6 +61,12 @@ This project is hosted at
 | :-------- | :------- | :----------------------------------- |
 | `id`      | `string` | **Required**. Id of player to update |
 
+| Body      | Type     | Description                             |
+| :-------- | :------- | :-------------------------------------- |
+| `name`    | `string` | **Optional**. updated name of player    |
+| `email`   | `string` | **Optional**. updated email of player   |
+| `country` | `string` | **Optional**. updated country of player |
+
 #### Delete player
 
 ```http
