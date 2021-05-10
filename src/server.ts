@@ -34,11 +34,19 @@ app.use(async (_, res, next) => {
 
 // Homepage
 app.get("/", (_, res) => {
-  return res.status(200).json({ message: "Welcome to NBA players API" });
+  return res.status(200).json({
+    message:
+      "Welcome to NBA players API. Please visit https://github.com/Adeniyii/CRUD-APP for usage information.",
+  });
 });
 
 // Routes
 app.use("/api/players", playerRoutes);
+
+// Catch unregistered routes
+app.all("*", (_, res) => {
+  return res.status(404).json({ message: "Bad request." });
+});
 
 // Listener
 app.listen(port, () => console.log(`Listening on port ${port}...`));
