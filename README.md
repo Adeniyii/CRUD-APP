@@ -89,7 +89,7 @@ This project is hosted at
 
 Clone the project
 
-```bash
+```git
   git clone https://github.com/Adeniyii/CRUD-APP.git
 ```
 
@@ -101,18 +101,18 @@ Go to the project directory
 
 Install dependencies
 
-```bash
+```yarn
   yarn install
 ```
 
 Compile to javascript
 
-```bash
+```yarn
   yarn run build
 ```
 
 Start the server
 
-```bash
+```yarn
   yarn run start
 ```
