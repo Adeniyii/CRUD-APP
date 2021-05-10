@@ -50,7 +50,7 @@ async function addPlayer(req: Request, res: Response) {
     const savedDoc = await player.save();
     return res
       .status(201)
-      .json({ message: "Added successfully", data: savedDoc });
+      .json({ message: "Added successfully", data: { savedDoc } });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -73,7 +73,7 @@ async function updatePlayer(req: Request, res: Response) {
     );
     return res
       .status(201)
-      .json({ message: "Updated successfully", data: updatedPlayer });
+      .json({ message: "Updated successfully", data: { updatedPlayer } });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -90,7 +90,7 @@ async function removePlayer(req: Request, res: Response) {
     const removedPlayer = await PlayerModel.findByIdAndDelete(id);
     return res
       .status(200)
-      .json({ message: "Removed successfully", data: removedPlayer });
+      .json({ message: "Removed successfully", data: { removedPlayer } });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
