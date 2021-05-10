@@ -32,6 +32,11 @@ app.use(async (_, res, next) => {
   next();
 });
 
+// Homepage
+app.get("/", (_, res) => {
+  return res.status(200).json({ message: "Welcome to NBA players API" });
+});
+
 // Routes
 app.use("/api/players", playerRoutes);
 
