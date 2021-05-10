@@ -12,6 +12,7 @@ async function getPlayer(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const player = await PlayerModel.findById(id);
+    if (!player) throw new Error("No player was found for given id.");
     return res
       .status(200)
       .json({ message: "Fetched successfully", data: { player } });
@@ -71,6 +72,7 @@ async function updatePlayer(req: Request, res: Response) {
       { $set: { name: name, email: email, country: country } },
       { new: true, omitUndefined: true }
     );
+    if (!updatedPlayer) throw new Error("No player was found for given id.");
     return res
       .status(201)
       .json({ message: "Updated successfully", data: { updatedPlayer } });
@@ -88,6 +90,7 @@ async function removePlayer(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const removedPlayer = await PlayerModel.findByIdAndDelete(id);
+    if (!removedPlayer) throw new Error("No player was found for given id.");
     return res
       .status(200)
       .json({ message: "Removed successfully", data: { removedPlayer } });
