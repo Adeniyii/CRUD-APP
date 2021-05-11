@@ -17,7 +17,9 @@ async function getPlayer(req: Request, res: Response) {
       .status(200)
       .json({ message: "Fetched successfully", data: { player } });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return error.name === "CastError"
+      ? res.status(404).json({ message: error.reason.message })
+      : res.status(500).json({ message: error.message });
   }
 }
 
@@ -77,7 +79,9 @@ async function updatePlayer(req: Request, res: Response) {
       .status(201)
       .json({ message: "Updated successfully", data: { updatedPlayer } });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return error.name === "CastError"
+      ? res.status(404).json({ message: error.reason.message })
+      : res.status(500).json({ message: error.message });
   }
 }
 
@@ -95,7 +99,9 @@ async function removePlayer(req: Request, res: Response) {
       .status(200)
       .json({ message: "Removed successfully", data: { removedPlayer } });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return error.name === "CastError"
+      ? res.status(404).json({ message: error.reason.message })
+      : res.status(500).json({ message: error.message });
   }
 }
 
