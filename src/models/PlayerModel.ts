@@ -10,20 +10,19 @@ const PlayerSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     country: {
       type: String,
       required: true,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  { autoIndex: false }
+  {
+    timestamps: true,
+  }
 );
 
 // Create collection from PlayerSchema
-const PlayerModel = model("Player", PlayerSchema);
+const PlayerModel = model("Players", PlayerSchema);
 
 export default PlayerModel;
