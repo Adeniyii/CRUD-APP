@@ -13,7 +13,6 @@ This is a simple api, fully configured to the REST specification for Creating, R
 ## Acknowledgements
 
 - [Zuri Training](https://zuri.team/)
-- [Awesome README](https://github.com/matiassingers/awesome-readme)
 
 ## Hosting
 
@@ -45,11 +44,12 @@ This project is hosted at
   POST /api/player/
 ```
 
-| Body      | Type     | Description                            |
-| :-------- | :------- | :------------------------------------- |
-| `name`    | `string` | **Required**. Name of player to add    |
-| `email`   | `string` | **Required**. Email of player to add   |
-| `country` | `string` | **Required**. Country of player to add |
+| Body       | Type     | Description                             |
+| :--------- | :------- | :-------------------------------------- |
+| `name`     | `string` | **Required**. Name of player to add     |
+| `email`    | `string` | **Required**. Email of player to add    |
+| `password` | `string` | **Required**. Password of player to add |
+| `country`  | `string` | **Required**. Country of player to add  |
 
 #### Update player
 
@@ -61,11 +61,12 @@ This project is hosted at
 | :-------- | :------- | :----------------------------------- |
 | `id`      | `string` | **Required**. Id of player to update |
 
-| Body      | Type     | Description                             |
-| :-------- | :------- | :-------------------------------------- |
-| `name`    | `string` | **Optional**. updated name of player    |
-| `email`   | `string` | **Optional**. updated email of player   |
-| `country` | `string` | **Optional**. updated country of player |
+| Body       | Type     | Description                              |
+| :--------- | :------- | :--------------------------------------- |
+| `name`     | `string` | **Optional**. updated name of player     |
+| `email`    | `string` | **Optional**. updated email of player    |
+| `password` | `string` | **Optional**. updated password of player |
+| `country`  | `string` | **Optional**. updated country of player  |
 
 #### Delete player
 
