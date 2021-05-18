@@ -1,115 +1,52 @@
-import { Request, Response, Router } from "express";
-import PlayerModel from "../models/PlayerModel";
+import { Router } from "express";
+import {
+  addPlayer,
+  getPlayer,
+  getPlayers,
+  removePlayer,
+  updatePlayer,
+} from "../controllers/playerController";
+import { body, oneOf } from "express-validator";
 
 const route = Router();
 
-/**
- * A route handler to query for a single player from the NBA database using player id provided in req params.
- * @param req HTTP request object from client.
- * @param res Sends back a status code and a json object containing message {string} and data {Object} from database on success, or an error message on failure.
- */
-async function getPlayer(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const player = await PlayerModel.findById(id);
-    if (!player) throw new Error("No player was found for given id.");
-    return res
-      .status(200)
-      .json({ message: "Fetched successfully", data: { player } });
-  } catch (error) {
-    return error.name === "CastError"
-      ? res.status(404).json({ message: error.reason.message })
-      : res.status(500).json({ message: error.message });
-  }
-}
+route.get("/", getPlayers);
 
-/**
- * A route handler to query for all players from NBA database.
- * @param req HTTP request object from client.
- * @param res A json object containing message {string} and data {Object} from database on success, or an error message on failure.
- */
-async function getPlayers(_: Request, res: Response) {
-  try {
-    const players = await PlayerModel.find({});
-    return res.status(200).json({
-      message: "Fetched successfully",
-      data: { players },
-    });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-}
+route.get("/:id", getPlayer);
 
-/**
- * A route handler to add a player to the NBA database using data {Object} provided in the request body.
- * @param req HTTP request object from client.
- * @param res Sends back a status code and a json object containing message {string} and data {Object} from database on success, or an error message on failure.
- */
-async function addPlayer(req: Request, res: Response) {
-  try {
-    const playerPayload = req.body;
+route.delete("/:id", removePlayer);
 
-    const player = new PlayerModel(playerPayload);
-    const savedDoc = await player.save();
-    return res
-      .status(201)
-      .json({ message: "Added successfully", data: { savedDoc } });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-}
+route.post(
+  "/",
+  [
+    // Validate request
+    body("email", "Invalid email address").isEmail(),
+    body("password", "Invalid password")
+      .exists()
+      .isLength({ min: 5 })
+      .withMessage("Password must be more than 5 characters."),
+    body("name", "Invalid name").exists().isLength({ min: 2 }),
+    body("country", "Invalid country").exists(),
+  ],
+  addPlayer
+);
 
-/**
- * A route handler to update a player in the NBA database using the player id provided in req.params wiith the data {Object} provided in the request body.
- * @param req HTTP request object from client.
- * @param res Sends back a status code and a json object containing message {string} and data {Object} from database on success, or an error message on failure.
- */
-async function updatePlayer(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const { name, email, country } = req.body;
-
-    const updatedPlayer = await PlayerModel.findByIdAndUpdate(
-      id,
-      { $set: { name: name, email: email, country: country } },
-      { new: true, omitUndefined: true }
-    );
-    if (!updatedPlayer) throw new Error("No player was found for given id.");
-    return res
-      .status(201)
-      .json({ message: "Updated successfully", data: { updatedPlayer } });
-  } catch (error) {
-    return error.name === "CastError"
-      ? res.status(404).json({ message: error.reason.message })
-      : res.status(500).json({ message: error.message });
-  }
-}
-
-/**
- * A route handler to delete a player from the NBA database using the player id provided in req.params
- * @param req HTTP request object from client.
- * @param res Sends back a status code and a json object containing message {string} and data {Object} from database on success, or an error message on failure.
- */
-async function removePlayer(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const removedPlayer = await PlayerModel.findByIdAndDelete(id);
-    if (!removedPlayer) throw new Error("No player was found for given id.");
-    return res
-      .status(200)
-      .json({ message: "Removed successfully", data: { removedPlayer } });
-  } catch (error) {
-    return error.name === "CastError"
-      ? res.status(404).json({ message: error.reason.message })
-      : res.status(500).json({ message: error.message });
-  }
-}
-
-route
-  .post("/", addPlayer)
-  .get("/", getPlayers)
-  .get("/:id", getPlayer)
-  .put("/:id", updatePlayer)
-  .delete("/:id", removePlayer);
+route.put(
+  "/:id",
+  [
+    // Validate request
+    oneOf(
+      [
+        body("name").exists(),
+        body("email").exists(),
+        body("password").exists(),
+        body("country").exists(),
+      ],
+      "No fields were provided."
+    ),
+  ],
+  updatePlayer
+);
 
 export default route;
+//

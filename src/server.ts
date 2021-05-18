@@ -1,17 +1,15 @@
-import express from "express";
-import { config } from "dotenv";
+import express, { NextFunction, Request, Response } from "express";
 import playerRoutes from "./routes/playerRoute";
-import { connectDB } from "./config/dbConfig";
+import { connectDB } from "./db/dbConfig";
 import { Mongoose } from "mongoose";
+import { config } from "dotenv";
 
 // Load dotenv
 config();
-
-// Init express
 const app = express();
-app.use(express.json());
-
 const port = process.env.PORT || 4000;
+
+app.use(express.json());
 
 // Mongoose connection
 let mongooseConn: Mongoose | undefined;
@@ -25,8 +23,8 @@ app.use(async (_, res, next) => {
         `connected to database: ${mongooseConn!.connection.db.databaseName}...`
       );
     } catch (error) {
-      res.status(500).json({ message: error.message });
-      return;
+      res.status(500).json({ statusCode: 500, message: error.message });
+      next(error);
     }
   }
   next();
@@ -35,18 +33,24 @@ app.use(async (_, res, next) => {
 // Homepage
 app.get("/", (_, res) => {
   return res.status(200).json({
+    statusCode: 200,
     message:
-      "Welcome to NBA players API. Please visit https://github.com/Adeniyii/CRUD-APP for usage information.",
+      "Welcome to NBA players API. Visit https://github.com/Adeniyii/CRUD-APP for usage information.",
   });
 });
 
-// Routes
+// Register player routes
 app.use("/api/players", playerRoutes);
 
 // Catch unregistered routes
 app.all("*", (_, res) => {
-  return res.status(404).json({ message: "Bad request." });
+  return res.status(404).json({ statusCode: 404, message: "Page not found." });
 });
 
-// Listener
+// Error handler
+app.use(function (err: Error, _: Request, __: Response, ___: NextFunction) {
+  console.error(err);
+  process.exit(1);
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}...`));

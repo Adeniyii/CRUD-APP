@@ -16,6 +16,7 @@ export async function connectDB() {
       useFindAndModify: false,
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     });
     return client;
   } catch (error) {
